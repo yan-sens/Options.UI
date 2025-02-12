@@ -1,0 +1,46 @@
+﻿@using BlazorBootstrap
+
+@inherits LayoutComponentBase
+<div class="page">
+
+    <script src="/jquery/jquery.min.js"></script>
+
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+
+            <AuthorizeView>
+                <Authorized>
+                    <p class="my-3 me-3">@context.User.Identity!.Name</p>
+                    <button class="btn btn-primary main-color" @onclick="Logout">Logout</button>
+                </Authorized>
+                <NotAuthorized>
+                    <a class="btn btn-primary main-color" href="Login">Login</a>
+                    <a class="btn btn-outline-primary main-color" href="Register">Register</a>
+                </NotAuthorized>
+            </AuthorizeView>
+
+        </div>
+
+        <Preload LoadingText="Loading..." />
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@inject AuthenticationStateProvider provider
+@inject NavigationManager navManager
+@code {
+
+    private void Logout()
+    {
+        var authStateProvider = (CustomAuthStateProvider)provider;
+        authStateProvider.Logout();
+        navManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,22 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Hello @context.User.Identity!.Name</h1>
+
+        <p>This application was created to keep statistics of options trading. At the moment it is under development and only a test version is available. We will be very grateful for any feedback.</p>
+
+        <button class="btn btn-primary main-color">Send a feedback</button>
+
+    </Authorized>
+    <NotAuthorized>
+        <h1>Hello user</h1>
+
+        <p>This application was created to keep statistics of options trading. At the moment it is under development and only a test version is available. We will be very grateful for any feedback.</p>
+        <p>To start using the application, please create an account or log in</p>
+    </NotAuthorized>
+</AuthorizeView>
