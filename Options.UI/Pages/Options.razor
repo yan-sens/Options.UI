@@ -79,25 +79,25 @@
     </div>
     <div class="col-md-3">
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary main-color" @onclick="OpenOptionDialog">Create option</button>
+            <button class="btn btn-primary main-color" @onclick="viewModel.OpenOptionDialog">Create option</button>
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <MatDialog @bind-IsOpen="@optionsViewModel.CreateOptionDialogIsOpen">
+        <MatDialog @bind-IsOpen="@viewModel.CreateOptionDialogIsOpen">
             <MatDialogTitle>CREATE OPTION</MatDialogTitle>
             <MatDialogContent>
 
                 <div class="row mx-auto">
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Ticker name" @bind-Value="@optionsViewModel.Option.TickerName"></MatTextField>
+                        <MatTextField Required Label="Ticker name" @bind-Value="@viewModel.Option.TickerName"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatSelectItem @bind-Value="@optionsViewModel.Option.Type" Items="@value1Items">
+                        <MatSelectItem @bind-Value="@viewModel.Option.Type" Items="@viewModel.OptionTypes">
                             <ItemTemplate>
                                 <span>@(@context == OptionTypeEnum.SellCall ? "SELL CALL" : "SELL PUT")</span>
                             </ItemTemplate>
@@ -105,31 +105,31 @@
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Price" @bind-Value="@optionsViewModel.Option.Price"></MatTextField>
+                        <MatTextField Required Label="Price" @bind-Value="@viewModel.Option.Price"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Worth" @bind-Value="@optionsViewModel.Option.Worth"></MatTextField>
+                        <MatTextField Required Label="Worth" @bind-Value="@viewModel.Option.Worth"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Contracts" @bind-Value="@optionsViewModel.Option.Contracts"></MatTextField>
+                        <MatTextField Required Label="Contracts" @bind-Value="@viewModel.Option.Contracts"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Premium" @bind-Value="@optionsViewModel.Option.Premium"></MatTextField>
+                        <MatTextField Required Label="Premium" @bind-Value="@viewModel.Option.Premium"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Delta" @bind-Value="@optionsViewModel.Option.Delta"></MatTextField>
+                        <MatTextField Required Label="Delta" @bind-Value="@viewModel.Option.Delta"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatDatePicker Required Label="Start Date" @bind-Value="optionsViewModel.Option.StartDate" TValue="DateTime"></MatDatePicker>
+                        <MatDatePicker Required Label="Start Date" @bind-Value="viewModel.Option.StartDate" TValue="DateTime"></MatDatePicker>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatDatePicker Required Label="Expiration Date" @bind-Value="optionsViewModel.Option.ExpirationDate" TValue="DateTime"></MatDatePicker>
+                        <MatDatePicker Required Label="Expiration Date" @bind-Value="viewModel.Option.ExpirationDate" TValue="DateTime"></MatDatePicker>
                     </div>
 
                 </div>
@@ -138,7 +138,7 @@
 
             </MatDialogContent>
             <MatDialogActions>
-                <MatButton Class="text-secondary" OnClick="@(e => { optionsViewModel.CreateOptionDialogIsOpen = false; })">Cancel</MatButton>
+                <MatButton Class="text-secondary" OnClick="@(e => { viewModel.CreateOptionDialogIsOpen = false; })">Cancel</MatButton>
                 <MatButton Class="text-primary" OnClick="@CreateOption">Create</MatButton>
             </MatDialogActions>
         </MatDialog>
@@ -147,30 +147,30 @@
 
 <div class="row">
     <div class="col-md-12">
-        <MatDialog @bind-IsOpen="@optionsViewModel.RollOverDialogIsOpen">
+        <MatDialog @bind-IsOpen="@viewModel.RollOverDialogIsOpen">
             <MatDialogTitle>ROLL OVER</MatDialogTitle>
             <MatDialogContent>
 
                 <div class="row mx-auto">
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Price" @bind-Value="@optionsViewModel.Option.Price"></MatTextField>
+                        <MatTextField Required Label="Price" @bind-Value="@viewModel.Option.Price"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Premium" @bind-Value="@optionsViewModel.Option.Premium"></MatTextField>
+                        <MatTextField Required Label="Premium" @bind-Value="@viewModel.Option.Premium"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Required Label="Delta" @bind-Value="@optionsViewModel.Option.Delta"></MatTextField>
+                        <MatTextField Required Label="Delta" @bind-Value="@viewModel.Option.Delta"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatDatePicker Required Label="Start Date" @bind-Value="@optionsViewModel.Option.StartDate" TValue="DateTime"></MatDatePicker>
+                        <MatDatePicker Required Label="Start Date" @bind-Value="@viewModel.Option.StartDate" TValue="DateTime"></MatDatePicker>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatDatePicker Required Label="Expiration Date" @bind-Value="optionsViewModel.Option.ExpirationDate" TValue="DateTime"></MatDatePicker>
+                        <MatDatePicker Required Label="Expiration Date" @bind-Value="viewModel.Option.ExpirationDate" TValue="DateTime"></MatDatePicker>
                     </div>
 
                 </div>
@@ -179,7 +179,7 @@
 
             </MatDialogContent>
             <MatDialogActions>
-                <MatButton Class="text-secondary" OnClick="@(e => { optionsViewModel.RollOverDialogIsOpen = false; })">Cancel</MatButton>
+                <MatButton Class="text-secondary" OnClick="@(e => { viewModel.RollOverDialogIsOpen = false; })">Cancel</MatButton>
                 <MatButton Class="text-primary" @onclick="@(() => RollOver())">Roll</MatButton>
             </MatDialogActions>
         </MatDialog>
@@ -188,22 +188,22 @@
 
 <div class="row">
     <div class="col-md-12">
-        <MatDialog @bind-IsOpen="@optionsViewModel.CloseOptionDialogIsOpen">
+        <MatDialog @bind-IsOpen="@viewModel.CloseOptionDialogIsOpen">
             <MatDialogTitle>CLOSE OPTION</MatDialogTitle>
             <MatDialogContent>
 
                 <div class="row mx-auto">
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatCheckbox Label="Completed" @bind-Value="@optionsViewModel.Option.Completed"></MatCheckbox>
+                        <MatCheckbox Label="Completed" @bind-Value="@viewModel.Option.Completed"></MatCheckbox>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatTextField Disabled="@(!optionsViewModel.Option.Completed)" Label="Return amount" @bind-Value="@optionsViewModel.Option.ReturnAmount"></MatTextField>
+                        <MatTextField Disabled="@(!viewModel.Option.Completed)" Label="Return amount" @bind-Value="@viewModel.Option.ReturnAmount"></MatTextField>
                     </div>
 
                     <div class="col-md-6 opt-margin-bottom">
-                        <MatDatePicker Required Label="Closed Date" @bind-Value="optionsViewModel.Option.ClosedDate" TValue="DateTime?"></MatDatePicker>
+                        <MatDatePicker Required Label="Closed Date" @bind-Value="viewModel.Option.ClosedDate" TValue="DateTime?"></MatDatePicker>
                     </div>
 
                 </div>
@@ -212,14 +212,12 @@
 
             </MatDialogContent>
             <MatDialogActions>
-                <MatButton Class="text-secondary" OnClick="@(e => { optionsViewModel.CloseOptionDialogIsOpen = false; })">Cancel</MatButton>
+                <MatButton Class="text-secondary" OnClick="@(e => { viewModel.CloseOptionDialogIsOpen = false; })">Cancel</MatButton>
                 <MatButton Class="text-primary" @onclick="@(() => CloseOption())">Close option</MatButton>
             </MatDialogActions>
         </MatDialog>
     </div>
 </div>
-
-
 
 <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
 
@@ -241,7 +239,7 @@
                 @String.Format("{0:C}", @context.Worth)
             </GridColumn>
             <GridColumn TItem="Option" HeaderText="Premium Profit" PropertyName="Premium" FilterTextboxWidth="50" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Start">
-                @((MarkupString)@GetTotalPremiumPercentage(context)) (@((MarkupString)@GetTotalPremium(context)))
+                @((MarkupString)OptionsViewModel.GetTotalPremiumPercentage(context)) (@((MarkupString)OptionsViewModel.GetTotalPremium(context)))
             </GridColumn>
             <GridColumn TItem="Option" HeaderText="Type" PropertyName="Type" FilterTextboxWidth="50" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Center">
                 @(context.Type == Services.Enums.OptionTypeEnum.SellCall ? "SELL CALL" : "SELL PUT")
@@ -250,7 +248,7 @@
                 @context.StartDate.ToString("dd/MM/yyyy")
             </GridColumn>
             <GridColumn TItem="Option" HeaderText="Exp. Date" PropertyName="ExpirationDate" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Start">
-                @GetExpirationDateString(context)
+                @OptionsViewModel.GetExpirationDateString(context)
             </GridColumn>
 
         </GridColumns>
@@ -270,7 +268,7 @@
                                 <b>@String.Format("{0:C}", nested.Price)</b>
                             </td>
                             <td style="width: 40%;">
-                                @((MarkupString)GetTotalPremium(nested)) (@((MarkupString)@GetRollOvelPremiumPercentage(nested, context.Worth)))
+                                @((MarkupString)OptionsViewModel.GetTotalPremium(nested)) (@((MarkupString)OptionsViewModel.GetRollOvelPremiumPercentage(nested, context.Worth)))
                             </td>
                             <td style="width: 35%;">@nested.ExpirationDate.ToString("dd/MM/yyyy")</td>
                         </MatTableRow>
@@ -283,13 +281,13 @@
                             Status
                         </div>
                         <div class="col-md-4 opt-margin-bottom">
-                            @((MarkupString)@GetOptionStatus(context))
+                            @((MarkupString)OptionsViewModel.GetOptionStatus(context))
                         </div>
                         <div class="col-md-2 opt-margin-bottom opt-pl-0">
                             Exp. Date
                         </div>
                         <div class="col-md-4 opt-margin-bottom">
-                            @((MarkupString)GetExpirationDateString(context))
+                            @((MarkupString)OptionsViewModel.GetExpirationDateString(context))
                         </div>
                     </div>
                     <div class="row mx-auto">
@@ -297,13 +295,13 @@
                             Total Premium
                         </div>
                         <div class="col-md-4 opt-margin-bottom">                        
-                            @((MarkupString)@GetTotalPremiumPercentage(context)) (@((MarkupString)@GetTotalPremium(context)))
+                            @((MarkupString)OptionsViewModel.GetTotalPremiumPercentage(context)) (@((MarkupString)OptionsViewModel.GetTotalPremium(context)))
                         </div>
                         <div class="col-md-2 opt-margin-bottom opt-pl-0">
                             Avg. Delta
                         </div>
                         <div class="col-md-4 opt-margin-bottom">
-                            @((MarkupString)@GetTotalDelta(context))
+                            @((MarkupString)OptionsViewModel.GetTotalDelta(context))
                         </div>
                     </div>
                     <div class="row mx-auto">
@@ -311,13 +309,13 @@
                             Reg. Fee
                         </div>
                         <div class="col-md-4 opt-margin-bottom">
-                            @((MarkupString)@GetTotalFees(context))
+                            @((MarkupString)viewModel.GetTotalFees(context))
                         </div>
                         <div class="col-md-2 opt-margin-bottom opt-pl-0">
                             Duration
                         </div>
                         <div class="col-md-4 opt-margin-bottom">
-                            @((MarkupString)@GetDuration(context))
+                            @((MarkupString)@OptionsViewModel.GetDuration(context))
                         </div>
                     </div>
                     <div class="row mx-auto">
@@ -339,10 +337,10 @@
 
             <div class="row mx-auto">
                 <div class="col-md-12 opt-margin-bottom" style="text-align: right;">
-                    @if(!context.IsClosed)
+                    @if (!context.IsClosed)
                     {
-                        <button class="btn btn-primary main-color" @onclick="@(()=> OpenCloseOptionDialog(@context))">Close</button>
-                        <button class="btn btn-primary main-color" @onclick="@(() => OpenRollOverDialog(@context))">Roll Over</button>
+                        <button class="btn btn-primary main-color" @onclick="@(()=> viewModel.OpenCloseOptionDialog(@context))">Close</button>
+                        <button class="btn btn-primary main-color" @onclick="@(() => viewModel.OpenRollOverDialog(@context))">Roll Over</button>
                     }
                 </div>
             </div>
@@ -359,27 +357,7 @@
     [Inject] protected IMatToaster Toaster { get; set; } = default!;
 
     private Grid<Option> optionsGrid = default!;
-
-    private OptionsViewModel optionsViewModel = new OptionsViewModel();
-
-    private void OpenRollOverDialog(Option currentOption)
-    {
-        optionsViewModel.ParentOptionId = currentOption.Id;
-        optionsViewModel.RollOverDialogIsOpen = true;
-    }
-
-    private void OpenCloseOptionDialog(Option currentOption)
-    {
-        optionsViewModel.Option = currentOption;
-        optionsViewModel.ParentOptionId = currentOption.Id;
-        optionsViewModel.CloseOptionDialogIsOpen = true;
-    }
-
-    private void OpenOptionDialog()
-    {
-        optionsViewModel.ParentOptionId = null;
-        optionsViewModel.CreateOptionDialogIsOpen = true;
-    }
+    private OptionsViewModel viewModel = new OptionsViewModel();
 
     private async Task CloseOption()
     {
@@ -388,10 +366,10 @@
 
     private async Task RollOver()
     {
-        var parentOption = optionsViewModel.OptionsList.FirstOrDefault(x => x.Id == optionsViewModel.ParentOptionId);
+        var parentOption = viewModel.OptionsList.FirstOrDefault(x => x.Id == viewModel.ParentOptionId);
         if (parentOption != null)
         {
-            var validationResult = parentOption.ValidateRollOver(optionsViewModel.Option);
+            var validationResult = parentOption.ValidateRollOver(viewModel.Option);
             if (validationResult.IsValid)
             {
                 await CreateOption();
@@ -407,169 +385,21 @@
         }
     }
 
-    private string GetDuration(Option option)
-    {
-        var startDate = option.StartDate;
-        var expirationDate = option.ExpirationDate;
-
-        if (option.RollOvers != null)
-        {
-            option.RollOvers.ToList().ForEach(rollOver =>
-            {
-                if (expirationDate < rollOver.ExpirationDate)
-                {
-                    expirationDate = rollOver.ExpirationDate;
-                }
-            });
-        }
-
-        var days = (startDate.Date - expirationDate.Date).Days;
-        var response = -days + " days";
-
-        return response;
-    }
-
-    private string GetTotalFees(Option option)
-    {
-        var multiplieer = option.RollOvers != null ? option.RollOvers.Count + 1 : 1;
-        var totalFees = optionsViewModel.RegulatoryFee * multiplieer;
-
-        return @String.Format("{0:C}", totalFees);
-    }
-
-    private string GetTotalDelta(Option option)
-    {
-        var deriver = option.RollOvers != null ? option.RollOvers.Count + 1 : 1;
-        var totalDelta = option.Delta;
-        if (option.RollOvers != null)
-        {
-            option.RollOvers.ToList().ForEach(rollOver => totalDelta += rollOver.Delta);
-        }
-
-        var result = totalDelta / deriver;
-
-        return @String.Format("{0:0.00}", result);
-    }
-
-    private string GetTotalPremium(Option option)
-    {
-        var total = option.Premium;
-        if (option.RollOvers != null && option.RollOvers.Count > 0)
-        {
-            option.RollOvers.ToList().ForEach(x =>
-            {
-                total += x.Premium;
-            });
-        }
-
-        var response = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + (total >= 0 ? "+" : "") + @String.Format("{0:C}", total) + "</span>";
-
-        return response;
-    }
-
-    private string GetRollOvelPremiumPercentage(Option rollOver, double worth)
-    {
-        var averagePremium = rollOver.Premium;
-        var isNegatibe = averagePremium < 0;
-
-        if (isNegatibe)
-        {
-            averagePremium = averagePremium * -1;
-        }
-
-        var totalPremiumProfit = (averagePremium / (worth / 100)) / 100;
-
-        var response = "<span class='" + (!isNegatibe ? "opt-green" : "opt-red") + "'>" + (!isNegatibe ? "+" : "-") + totalPremiumProfit.ToString("P1") + "</span>";
-
-        return response;
-    }
-
-    private string GetTotalPremiumPercentage(Option option)
-    {
-        var averagePremium = option.Premium;
-        if (option.RollOvers != null && option.RollOvers.Count > 0)
-        {
-            option.RollOvers.ToList().ForEach(x =>
-            {
-                averagePremium += (int)x.Premium;
-            });
-        }
-
-        var isNegatibe = averagePremium < 0;
-
-        if (isNegatibe)
-        {
-            averagePremium = averagePremium * -1;
-        }
-
-        var totalPremiumProfit = (averagePremium / (option.Worth / 100)) / 100;
-
-        var response = "<span class='" + (!isNegatibe ? "opt-green" : "opt-red") + "'>" + (!isNegatibe ? "+" : "") + totalPremiumProfit.ToString("P1") + "</span>";
-
-        return response;
-    }
-
-    private DateTime GetExpirationDate(Option option)
-    {
-        var expirationDate = option.ExpirationDate;
-
-        if (option.RollOvers != null)
-        {
-            option.RollOvers.ToList().ForEach(rollOver =>
-            {
-                if (expirationDate < rollOver.ExpirationDate)
-                {
-                    expirationDate = rollOver.ExpirationDate;
-                }
-            });
-        }
-
-        return expirationDate;
-    }
-
-    private string GetExpirationDateString(Option option)
-    {
-        var expirationDate = GetExpirationDate(option);
-
-        return expirationDate.ToString("dd/MM/yyyy");
-    }
-
-    private string CalculateRollOverProfit(Option parent, Option rollOver)
-    {
-        var profit = (rollOver.Premium / (parent.Worth / 100)) / 100;
-        var response = "<span class='" + (profit >= 0 ? "opt-green" : "opt-red") + "'>" + profit.ToString("P1") + "</span>";
-        return response;
-    }
-
-    private string GetOptionStatus(Option option)
-    {
-        var isClosed = option.IsClosed || (option.RollOvers != null && option.RollOvers!.Any(x => x.IsClosed));
-        var response = "<span class='" + (!isClosed ? "opt-green" : "opt-red") + "'>" + (!isClosed ? "Open" : "Closed") + "</span>";
-        return response;
-    }
-
-    private string CalculateProfit(Option option)
-    {
-        var profit = (option.Premium / (option.Worth / 100)) / 100;
-        var response = profit.ToString("P1");
-        return response;
-    }
-
     private async Task UpdateOption()
     {
-        var expirationDate = GetExpirationDate(optionsViewModel.Option);
-        var validationResult = optionsViewModel.Option.ValidateClosingOption(expirationDate);
+        var expirationDate = OptionsViewModel.GetExpirationDate(viewModel.Option);
+        var validationResult = viewModel.Option.ValidateClosingOption(expirationDate);
         if (validationResult.IsValid)
         {
             PreloadService.Show(SpinnerColor.Primary);
 
-            optionsViewModel.Option.IsClosed = true;
+            viewModel.Option.IsClosed = true;
 
-            var result = await _optionsService.UpdateOptionAsync(optionsViewModel.Option);
+            var result = await _optionsService.UpdateOptionAsync(viewModel.Option);
 
             await optionsGrid.RefreshDataAsync();
 
-            optionsViewModel.CloseAllOptionDialogs();
+            viewModel.CloseAllOptionDialogs();
             PreloadService.Hide();
         }
         else
@@ -581,20 +411,20 @@
     private async Task CreateOption()
     {
         var userId = await GetUserId();
-        optionsViewModel.Option.UserId = userId;
-        optionsViewModel.Option.ParentOptionId = optionsViewModel.ParentOptionId;
-        optionsViewModel.ParentOptionId = optionsViewModel.ParentOptionId;
+        viewModel.Option.UserId = userId;
+        viewModel.Option.ParentOptionId = viewModel.ParentOptionId;
+        viewModel.ParentOptionId = viewModel.ParentOptionId;
 
-        var validationResult = optionsViewModel.Option.IsValid();
+        var validationResult = viewModel.Option.IsValid();
         if(validationResult.IsValid)
         {
             PreloadService.Show(SpinnerColor.Primary);
 
-            var result = await _optionsService.CreateOptionAsync(optionsViewModel.Option);
+            var result = await _optionsService.CreateOptionAsync(viewModel.Option);
 
             await optionsGrid.RefreshDataAsync();
 
-            optionsViewModel.CloseAllOptionDialogs();
+            viewModel.CloseAllOptionDialogs();
             PreloadService.Hide();
         }
         else
@@ -602,12 +432,6 @@
             Toaster.Add(validationResult.ErrorMessage, MatToastType.Danger, "Validation Error");
         }
     }
-
-    OptionTypeEnum[] value1Items = new[]
-    {
-        OptionTypeEnum.SellPut,
-        OptionTypeEnum.SellCall
-    };
 
     private async Task<Guid> GetUserId()
     {
@@ -638,11 +462,11 @@
         }
 
         var result = await _optionsService.GetOptionsAsync(filter);
-        optionsViewModel.OptionsList = result;
+        viewModel.OptionsList = result;
 
         PreloadService.Hide();
 
-        return await Task.FromResult(new GridDataProviderResult<Option> { Data = optionsViewModel.OptionsList, TotalCount = optionsViewModel.OptionsList.Count });
+        return await Task.FromResult(new GridDataProviderResult<Option> { Data = viewModel.OptionsList, TotalCount = viewModel.OptionsList.Count });
     }
 }
 
