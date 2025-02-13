@@ -1,8 +1,10 @@
 ﻿@page "/Profile"
+@using global::Options.UI.ViewModels
+@using BlazorBootstrap
 
 @attribute [Authorize]
 
-@if(userProfile == null)
+@if (viewModel.UserProfile == null)
 {
     <p><em>@message</em></p>
 }
@@ -11,31 +13,32 @@ else
     <h3 class="mb-3">Profile</h3>
 
     <div class="row mb-3">
-        <label class="col-md-3 col-form-label">Name</label>
+        <label class="col-md-3 col-form-label" style="align-content: center;">Name</label>
         <div class="col-md-8">
-            <input class="form-control-plaintext" readonly @bind="userProfile.Name" />
+            <MatTextField Required Label="Name" @bind-Value="@viewModel.UserProfile.Name"></MatTextField>
         </div>
     </div>
 
     <div class="row mb-3">
-        <label class="col-md-3 col-form-label">Email</label>
+        <label class="col-md-3 col-form-label" style="align-content: center;">Phone Number</label>
         <div class="col-md-8">
-            <input class="form-control-plaintext" readonly @bind="userProfile.Email" />
+            <MatTextField Required Label="Phone Number" @bind-Value="@viewModel.UserProfile.PhoneNumber"></MatTextField>
         </div>
     </div>
 
-    <div class="row mb-3">
-        <label class="col-md-3 col-form-label">Phone Number</label>
-        <div class="col-md-8">
-            <input class="form-control-plaintext" readonly @bind="userProfile.PhoneNumber" />
-        </div>
+    <div class="row">
+        <button class="btn btn-primary opt-primary-btn" style="width: 100px; margin-top: 70px;" @onclick="UpdateUserProfile">Save</button>
     </div>
 }
 
 @inject HttpClient http
 @code {
-    public UserProfile? userProfile = null;
+    [Inject] public IUserProfileService _userProfileService { get; set; } = default!;
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+    [Inject] protected IMatToaster Toaster { get; set; } = default!;
+
     private string message = string.Empty;
+    private UserProfileViewModel viewModel = new UserProfileViewModel();
 
     protected override async Task OnInitializedAsync()
     {
@@ -43,11 +46,20 @@ else
         {
             message = "Loading...";
 
-            userProfile = await http.GetFromJsonAsync<UserProfile>("api/account/Profile");
+            viewModel.UserProfile = await http.GetFromJsonAsync<UserProfile>("api/account/profile");
         }
         catch
         {
             message = "Can't read user profile.";
         }
+    }
+
+    private async Task UpdateUserProfile()
+    {
+        PreloadService.Show(SpinnerColor.Primary);
+
+        var result = await _userProfileService.UpdateUserProfileAsync(viewModel.UserProfile);
+
+        PreloadService.Hide();
     }
 }
