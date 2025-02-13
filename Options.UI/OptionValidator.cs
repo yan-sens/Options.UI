@@ -152,7 +152,7 @@ namespace Options.UI
 
             else if (rollOver.ExpirationDate.Date <= expirationDate.Date)
             {
-                response.ErrorMessage = $"Expiration date should be more then {expirationDate.Date}.";
+                response.ErrorMessage = $"Expiration date should be more then {expirationDate.Date:dd/MM/yyyy}.";
                 return response;
             }
 

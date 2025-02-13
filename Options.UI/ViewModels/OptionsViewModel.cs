@@ -39,6 +39,9 @@ namespace Options.UI.ViewModels
 
         public void OpenRollOverDialog(Option currentOption)
         {
+            var expirationDate = GetExpirationDate(currentOption);
+
+            Option = new Option { StartDate = expirationDate, ParentOptionId = currentOption.Id };
             ParentOptionId = currentOption.Id;
             RollOverDialogIsOpen = true;
         }
@@ -56,7 +59,6 @@ namespace Options.UI.ViewModels
             ParentOptionId = null;
             DeleteOptionDialogIsOpen = true;
         }
-
 
         public void OpenOptionDialog()
         {
