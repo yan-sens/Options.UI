@@ -80,5 +80,18 @@ namespace Options.UI.Services.Services
 
             return option!;
         }
+
+        public async Task DeleteOptionAsync(Guid optionId)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/options/{optionId}");
+                if (response.IsSuccessStatusCode)
+                {
+
+                }
+            }
+            catch { }
+        }
     }
 }

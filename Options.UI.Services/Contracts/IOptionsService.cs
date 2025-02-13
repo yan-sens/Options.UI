@@ -7,5 +7,6 @@ namespace Options.UI.Services.Contracts
         Task<List<Option>> GetOptionsAsync(OptionsFilter filter);
         Task<Option> CreateOptionAsync(Option option);
         Task<Option> UpdateOptionAsync(Option option);
+        Task DeleteOptionAsync(Guid optionId);
     }
 }

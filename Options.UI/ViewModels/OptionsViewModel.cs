@@ -17,6 +17,8 @@ namespace Options.UI.ViewModels
 
         public bool CloseOptionDialogIsOpen { get; set; }
 
+        public bool DeleteOptionDialogIsOpen { get; set; }
+
         public double RegulatoryFee { get; set; } = 0;
 
         public OptionTypeEnum[] OptionTypes =
@@ -30,6 +32,7 @@ namespace Options.UI.ViewModels
             CreateOptionDialogIsOpen = false;
             RollOverDialogIsOpen = false;
             CloseOptionDialogIsOpen = false;
+            DeleteOptionDialogIsOpen = false;
             Option = new Option();
             ParentOptionId = null;
         }
@@ -46,6 +49,14 @@ namespace Options.UI.ViewModels
             ParentOptionId = currentOption.Id;
             CloseOptionDialogIsOpen = true;
         }
+
+        public void OpenDeleteOptionDialog(Option currentOption)
+        {
+            Option = currentOption;
+            ParentOptionId = null;
+            DeleteOptionDialogIsOpen = true;
+        }
+
 
         public void OpenOptionDialog()
         {

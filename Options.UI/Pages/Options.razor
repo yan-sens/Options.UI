@@ -55,15 +55,43 @@
     height: 45px;
     }
 
+    .opt-type-sell {
+        background-color: #D9EAD3;
+        color: #2E336E;
+    }
+
+    .opt-type-put {
+        background-color: #C2D2EF;
+        color: #2E336E;
+    }
+
+    .mdc-tab--active, .mdc-tab--active .mdc-tab__text-label {
+        color: #3a0647;
+    }
+
+    .opt-primary-btn {
+        margin-left: 10px;
+        font-weight: bold;
+        background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+        color: white;
+    }
+
+    .opt-secondary-btn {
+        margin-left: 10px;
+        font-weight: bold;
+        background-image: linear-gradient(180deg, rgb(128, 0, 0) 0%, rgb(255, 0, 0) 50%);
+        color: white;
+    }
+
 </style>
 
 <script>
 
     $(document).on("click", ".bb-detail-view-icon", function (event) {
-    $(event.currentTarget).toggleClass("custom-expanded-icon");
-    var targetRowId = $(event.currentTarget).attr("data-bs-target");
-    $(targetRowId).toggleClass("show");
-    })
+        $(event.currentTarget).toggleClass("custom-expanded-icon");
+        var targetRowId = $(event.currentTarget).attr("data-bs-target");
+        $(targetRowId).toggleClass("show");
+    });
 
 </script>
 
@@ -219,6 +247,37 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+        <MatDialog @bind-IsOpen="@viewModel.DeleteOptionDialogIsOpen">
+            <MatDialogTitle>DELETE OPTION</MatDialogTitle>
+            <MatDialogContent>
+
+                <div class="row mx-auto">
+
+                    <div class="col-md-12 opt-margin-bottom">
+                        <h6>Are you sure you want to delete this option?</h6>
+                    </div>
+
+                </div>
+
+                <MatToastContainer />
+
+            </MatDialogContent>
+            <MatDialogActions>
+
+                <div style="margin-bottom: 7px;">
+                    <button class="btn btn-primary opt-primary-btn" @onclick="@(e => { viewModel.DeleteOptionDialogIsOpen = false; })">Cancel</button>
+                    <button class="btn btn-primary opt-secondary-btn" @onclick="@(() => DeleteOption())">Delete Option</button>
+                </div>
+
+            </MatDialogActions>
+        </MatDialog>
+    </div>
+</div>
+
+
+
 <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
 
     <Grid TItem="Option"
@@ -230,7 +289,7 @@
         <GridColumns>
 
             <GridColumn TItem="Option" HeaderText="Ticker Name" PropertyName="TickerName" SortString="TickerName" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Center">
-                @context.TickerName
+                <b style="text-transform: uppercase;">@context.TickerName</b>
             </GridColumn>
             <GridColumn TItem="Option" HeaderText="Price" PropertyName="Price" FilterTextboxWidth="80" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Start">
                 @String.Format("{0:C}", context.Price)
@@ -242,13 +301,16 @@
                 @((MarkupString)OptionsViewModel.GetTotalPremiumPercentage(context)) (@((MarkupString)OptionsViewModel.GetTotalPremium(context)))
             </GridColumn>
             <GridColumn TItem="Option" HeaderText="Type" PropertyName="Type" FilterTextboxWidth="50" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Center">
-                @(context.Type == Services.Enums.OptionTypeEnum.SellCall ? "SELL CALL" : "SELL PUT")
+                <div class="@(context.Type == Services.Enums.OptionTypeEnum.SellCall ? "opt-type-sell" : "opt-type-put")">@(context.Type == Services.Enums.OptionTypeEnum.SellCall ? "SELL CALL" : "SELL PUT")</div>
             </GridColumn>
-            <GridColumn TItem="Option" HeaderText="Start date" PropertyName="StartDate" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Start">
-                @context.StartDate.ToString("dd/MM/yyyy")
+            <GridColumn TItem="Option" HeaderText="Duration" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Start">
+                @((MarkupString)OptionsViewModel.GetDuration(context))
             </GridColumn>
             <GridColumn TItem="Option" HeaderText="Exp. Date" PropertyName="ExpirationDate" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Start">
                 @OptionsViewModel.GetExpirationDateString(context)
+            </GridColumn>
+            <GridColumn TItem="Option" HeaderText="Status" HeaderTextAlignment="Alignment.Center" TextAlignment="Alignment.Start">
+                @((MarkupString)OptionsViewModel.GetOptionStatus(context))
             </GridColumn>
 
         </GridColumns>
@@ -265,7 +327,7 @@
                         </MatTableHeader>
                         <MatTableRow>
                             <td style="width: 25%;">
-                                <b>@String.Format("{0:C}", nested.Price)</b>
+                                @String.Format("{0:C}", nested.Price)
                             </td>
                             <td style="width: 40%;">
                                 @((MarkupString)OptionsViewModel.GetTotalPremium(nested)) (@((MarkupString)OptionsViewModel.GetRollOvelPremiumPercentage(nested, context.Worth)))
@@ -339,9 +401,12 @@
                 <div class="col-md-12 opt-margin-bottom" style="text-align: right;">
                     @if (!context.IsClosed)
                     {
-                        <button class="btn btn-primary main-color" @onclick="@(()=> viewModel.OpenCloseOptionDialog(@context))">Close</button>
-                        <button class="btn btn-primary main-color" @onclick="@(() => viewModel.OpenRollOverDialog(@context))">Roll Over</button>
+                        <button class="btn btn-primary opt-primary-btn" @onclick="@(()=> viewModel.OpenCloseOptionDialog(@context))">Close</button>
+                        <button class="btn btn-primary opt-primary-btn" @onclick="@(() => viewModel.OpenRollOverDialog(@context))">Roll Over</button>
                     }
+
+                    <button class="btn btn-primary opt-secondary-btn" @onclick="@(() => viewModel.OpenDeleteOptionDialog(@context))">Delete Option</button>
+
                 </div>
             </div>
 
@@ -431,6 +496,18 @@
         {
             Toaster.Add(validationResult.ErrorMessage, MatToastType.Danger, "Validation Error");
         }
+    }
+
+    private async Task DeleteOption()
+    {
+        PreloadService.Show(SpinnerColor.Primary);
+
+        await _optionsService.DeleteOptionAsync(viewModel.Option.Id);
+
+        await optionsGrid.RefreshDataAsync();
+
+        viewModel.CloseAllOptionDialogs();
+        PreloadService.Hide();
     }
 
     private async Task<Guid> GetUserId()
