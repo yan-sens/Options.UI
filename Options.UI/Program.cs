@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Options.UI;
 using Options.UI.Services.Contracts;
 using Options.UI.Services.Services;
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
@@ -32,5 +35,10 @@ builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>
 builder.Services.AddTransient<IOptionsService, OptionsService>();
 builder.Services.AddTransient<IUserProfileService, UserProfileService>();
 builder.Services.AddBlazoredLocalStorage();
+
+builder.Services
+  .AddBlazorise()
+  .AddBootstrap5Providers()
+  .AddFontAwesomeIcons();
 
 await builder.Build().RunAsync();

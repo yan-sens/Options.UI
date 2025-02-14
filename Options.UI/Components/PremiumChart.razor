@@ -1,0 +1,73 @@
+﻿@using Blazorise
+@using Blazorise.Charts
+
+<script src="js/chart.min.js"></script>
+
+<LineChart @ref="lineChart" TItem="double" />
+
+@code{
+    LineChart<double> lineChart;
+
+    protected override async Task OnAfterRenderAsync( bool firstRender )
+    {
+        if ( firstRender )
+        {
+            await HandleRedraw();
+        }
+    }
+
+    async Task HandleRedraw()
+    {
+        await lineChart.Clear();
+
+        await lineChart.AddLabelsDatasetsAndUpdate( Labels, GetLineChartDataset() );
+    }
+
+    LineChartDataset<double>[] GetLineChartDataset()
+    {
+        var items = new List<LineChartDataset<double>>
+        {
+            new LineChartDataset<double>
+            {
+
+                Label = "# of randoms",
+                Data = RandomizeData(),
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                Fill = true,
+                PointRadius = 3,
+                CubicInterpolationMode = "monotone",
+            },
+            new LineChartDataset<double>
+            {
+
+                Label = "# of randoms2",
+                Data = RandomizeData(),
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                Fill = true,
+                PointRadius = 3,
+                CubicInterpolationMode = "monotone",
+            }
+        };
+
+        return items.ToArray();
+    }
+
+    string[] Labels = { "Red", "Blue", "Yellow", "Green", "Purple", "Orange" };
+    List<string> backgroundColors = new List<string> { ChartColor.FromRgba( 18, 31, 96, 0.2f )};
+    List<string> borderColors = new List<string> { ChartColor.FromRgba(18, 31, 96, 1f), ChartColor.FromRgba(255, 0, 0, 1f) };
+
+    List<double> RandomizeData()
+    {
+        var r = new Random( DateTime.Now.Millisecond );
+
+        return new List<double> { 
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble() };
+    }
+}
