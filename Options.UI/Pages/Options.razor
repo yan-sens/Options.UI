@@ -152,8 +152,8 @@
 
             </MatDialogContent>
             <MatDialogActions>
-                <MatButton Class="text-secondary" OnClick="@(e => { viewModel.CreateOptionDialogIsOpen = false; })">Cancel</MatButton>
-                <MatButton Class="text-primary" OnClick="@CreateOption">Create</MatButton>
+                <button class="btn btn-primary opt-primary-btn" style="margin-bottom: 7px; width: 100px;" @onclick="CreateOption">Create</button>
+                <button class="btn btn-primary opt-secondary-btn" style="margin-bottom: 7px; width: 100px;" @onclick="@(() => { viewModel.CreateOptionDialogIsOpen = false; })">Cancel</button>
             </MatDialogActions>
         </MatDialog>
     </div>
@@ -193,8 +193,8 @@
 
             </MatDialogContent>
             <MatDialogActions>
-                <MatButton Class="text-secondary" OnClick="@(e => { viewModel.RollOverDialogIsOpen = false; })">Cancel</MatButton>
-                <MatButton Class="text-primary" @onclick="@(() => RollOver())">Roll</MatButton>
+                <button class="btn btn-primary opt-primary-btn" style="margin-bottom: 7px; width: 100px;" @onclick="RollOver">Roll</button>
+                <button class="btn btn-primary opt-secondary-btn" style="margin-bottom: 7px; width: 100px;" @onclick="@(() => { viewModel.RollOverDialogIsOpen = false; })">Cancel</button>
             </MatDialogActions>
         </MatDialog>
     </div>
@@ -226,8 +226,8 @@
 
             </MatDialogContent>
             <MatDialogActions>
-                <MatButton Class="text-secondary" OnClick="@(e => { viewModel.CloseOptionDialogIsOpen = false; })">Cancel</MatButton>
-                <MatButton Class="text-primary" @onclick="@(() => CloseOption())">Close option</MatButton>
+                <button class="btn btn-primary opt-primary-btn" style="margin-bottom: 7px; width: 100px;" @onclick="CloseOption">Close</button>
+                <button class="btn btn-primary opt-secondary-btn" style="margin-bottom: 7px; width: 100px;" @onclick="@(() => { viewModel.CloseOptionDialogIsOpen = false; })">Cancel</button>
             </MatDialogActions>
         </MatDialog>
     </div>
@@ -253,8 +253,8 @@
             <MatDialogActions>
 
                 <div style="margin-bottom: 7px;">
-                    <button class="btn btn-primary opt-primary-btn" @onclick="@(e => { viewModel.DeleteOptionDialogIsOpen = false; })">Cancel</button>
                     <button class="btn btn-primary opt-secondary-btn" @onclick="@(() => DeleteOption())">Delete Option</button>
+                    <button class="btn btn-primary opt-primary-btn" @onclick="@(e => { viewModel.DeleteOptionDialogIsOpen = false; })">Cancel</button>
                 </div>
 
             </MatDialogActions>
@@ -387,11 +387,11 @@
                 <div class="col-md-12 opt-margin-bottom" style="text-align: right;">
                     @if (!context.IsClosed)
                     {
-                        <button class="btn btn-primary opt-primary-btn" @onclick="@(()=> viewModel.OpenCloseOptionDialog(@context))">Close</button>
-                        <button class="btn btn-primary opt-primary-btn" @onclick="@(() => viewModel.OpenRollOverDialog(@context))">Roll Over</button>
+                        <button class="btn btn-primary opt-primary-btn" style="width: 100px;" @onclick="@(()=> viewModel.OpenCloseOptionDialog(@context))">Close</button>
+                        <button class="btn btn-primary opt-primary-btn" style="width: 100px;" @onclick="@(() => viewModel.OpenRollOverDialog(@context))">Roll Over</button>
                     }
 
-                    <button class="btn btn-primary opt-secondary-btn" @onclick="@(() => viewModel.OpenDeleteOptionDialog(@context))">Delete Option</button>
+                    <button class="btn btn-primary opt-secondary-btn" style="width: 100px;" @onclick="@(() => viewModel.OpenDeleteOptionDialog(@context))">Delete</button>
 
                 </div>
             </div>

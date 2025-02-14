@@ -14,8 +14,8 @@
 
             <AuthorizeView>
                 <Authorized>
-                    <p class="my-3 me-3">@context.User.Identity!.Name</p>
-                    <button class="btn btn-primary main-color" @onclick="Logout">Logout</button>
+                    <p class="my-3 me-3" style="font-weight: bold;">@context.User.Identity!.Name</p>
+                    <button class="btn btn-primary main-color opt-secondary-btn" @onclick="Logout">Logout</button>
                 </Authorized>
                 <NotAuthorized>
                     <a class="btn btn-primary main-color" href="Login">Login</a>
