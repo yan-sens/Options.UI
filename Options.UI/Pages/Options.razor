@@ -1,7 +1,10 @@
 ﻿@page "/Options"
 @using BlazorBootstrap
+@using Charts
 @using ViewModels
 @using global::Options.UI.Services.Enums
+@using global::Options.UI.Services.Models;
+@using global::Options.UI.Services.Contracts
 
 <style>
 
@@ -82,13 +85,19 @@
 </script>
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-10">
         <div class="row mx-auto">
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
-                Options Count
+                Total Options Count
             </div>
             <div class="col-md-2 opt-margin-bottom">
-
+                @((MarkupString)viewModel.StatsOptionCount)
+            </div>
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Active Options Count
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+                @((MarkupString)viewModel.StatsActiveOptionCount)
             </div>
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
                 Options Worth
@@ -96,35 +105,45 @@
             <div class="col-md-2 opt-margin-bottom">
                 @((MarkupString)viewModel.StatsOptionWorth)
             </div>
+        </div>
+        <div class="row mx-auto">
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
-                Exp. Date
+                Total Premium
             </div>
             <div class="col-md-2 opt-margin-bottom">
-                Test2
+                @((MarkupString)viewModel.StatsTotalPremium)
+            </div>
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Total Fees
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+
+            </div>
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Estimated Taxes
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+
             </div>
         </div>
         <div class="row mx-auto">
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
-                Options Count
+                Fixed Income
             </div>
             <div class="col-md-2 opt-margin-bottom">
-                @viewModel.OptionsList.Count()
             </div>
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
-                Exp. Date
+                Potential Income
             </div>
             <div class="col-md-2 opt-margin-bottom">
-                Test2
             </div>
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
-                Exp. Date
             </div>
             <div class="col-md-2 opt-margin-bottom">
-                Test2
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="d-flex justify-content-end">
             <button class="btn btn-primary main-color" @onclick="viewModel.OpenOptionDialog">Create option</button>
         </div>
@@ -133,10 +152,10 @@
 
 <div class="row" style="margin-top: 20px;" >
     <div class="col-md-6">
-        <Options.UI.Components.WorthChart />
+        <WorthChart @ref="WorthChart" />
     </div>
     <div class="col-md-6">
-        <Options.UI.Components.PremiumChart />
+        <PremiumChart @ref="PremiumChart"/>
     </div>
 </div>
 
@@ -449,6 +468,8 @@
 
     private Grid<Option> optionsGrid = default!;
     private OptionsViewModel viewModel = new OptionsViewModel();
+    private WorthChart WorthChart = default!;
+    private PremiumChart PremiumChart = default!;
 
     public EventCallback<ICollection<Option>> OptionsChanged { get; set; }
 
@@ -572,6 +593,8 @@
         await optionsGrid.RefreshDataAsync();
 
         await InvokeAsync(StateHasChanged);
+        await WorthChart.FetchOptions();
+        await PremiumChart.FetchOptions();
 
         PreloadService.Hide();
 

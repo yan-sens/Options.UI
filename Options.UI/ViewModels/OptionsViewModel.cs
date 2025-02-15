@@ -24,8 +24,11 @@ namespace Options.UI.ViewModels
 
         public string StatsOptionWorth { get; set; } = string.Empty;
 
-        public int StatsOptionCount { get; set; }
+        public string StatsOptionCount { get; set; } = string.Empty;
 
+        public string StatsActiveOptionCount { get; set; } = string.Empty;
+
+        public string StatsTotalPremium { get; set; } = string.Empty;
         public EventCallback<ICollection<Option>> OptionsChanged { get; set; }
 
         public OptionTypeEnum[] OptionTypes =
@@ -55,8 +58,34 @@ namespace Options.UI.ViewModels
 
         public void CalculateStatistics()
         {
-            StatsOptionCount = OptionsList.Count;
+            StatsOptionCount = OptionsList.Count.ToString();
             GetOptionsWorth();
+            GetActiveOptionsCount();
+            CalculateTotalPremium();
+        }
+
+        public void CalculateTotalPremium()
+        {
+            double total = 0;
+            double worth = 0;
+
+            OptionsList.ToList().ForEach(option =>
+            {
+                total += option.Premium;
+                worth = option.Worth;
+                if (option.RollOvers != null && option.RollOvers.Count > 0)
+                {
+                    option.RollOvers.ToList().ForEach(x =>
+                    {
+                        total += x.Premium;
+                    });
+                }
+            });
+
+            var totalPremiumProfit = (total / (worth / 100)) / 100;
+
+            StatsTotalPremium = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + (total >= 0 ? "+" : "") + 
+                totalPremiumProfit.ToString("P1") + " (" + @String.Format("{0:C}", total) + ")</span>";
         }
 
         public void GetOptionsWorth()
@@ -72,7 +101,23 @@ namespace Options.UI.ViewModels
                 }
             });
 
-            StatsOptionWorth = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + (total >= 0 ? "+" : "") + @String.Format("{0:C}", total) + "</span>";
+            StatsOptionWorth = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + @String.Format("{0:C}", total) + "</span>";
+        }
+
+        public void GetActiveOptionsCount()
+        {
+            double total = 0;
+
+            OptionsList.ToList().ForEach(option =>
+            {
+                var isOptionClosed = option.IsClosed || (option.RollOvers != null && option.RollOvers.Any(x => x.IsClosed));
+                if (!isOptionClosed)
+                {
+                    total += 1;
+                }
+            });
+
+            StatsActiveOptionCount = "<span class='opt-green'>" + total + "</span>";
         }
 
         public void OpenCloseOptionDialog(Option currentOption)

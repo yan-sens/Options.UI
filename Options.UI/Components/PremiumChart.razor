@@ -1,4 +1,6 @@
-﻿@using Blazorise
+﻿@namespace Charts
+
+@using Blazorise
 @using Blazorise.Charts
 @using System.Linq.Expressions
 @using System.Reflection
@@ -11,7 +13,7 @@
 
 @inject AuthenticationStateProvider provider
 @code {
-    [Inject] public IOptionsService _optionsService { get; set; } = default!;
+    [Inject] public Options.UI.Services.Contracts.IOptionsService _optionsService { get; set; } = default!;
 
     ICollection<Option> _options { get; set; } = default!;
     LineChart<double> lineChart;
@@ -50,7 +52,6 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await FetchOptions();
-        await HandleRedraw();
     }
 
     async Task HandleRedraw()
@@ -152,7 +153,7 @@
         return Guid.Parse(userId.Value);
     }
 
-    private async Task FetchOptions()
+    public async Task FetchOptions()
     {
         var userId = await GetUserId();
         OptionsFilter filter = new OptionsFilter
@@ -161,6 +162,7 @@
             };
 
         _options = await _optionsService.GetOptionsAsync(filter);
+        await HandleRedraw();
     }
 
 }

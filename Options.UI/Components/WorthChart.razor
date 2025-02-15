@@ -1,4 +1,6 @@
-﻿@using Blazorise
+﻿@namespace Charts
+
+@using Blazorise
 @using Blazorise.Charts
 @using System.Linq.Expressions
 @using System.Reflection
@@ -11,7 +13,7 @@
 
 @inject AuthenticationStateProvider provider
 @code {
-    [Inject] public IOptionsService _optionsService { get; set; } = default!;
+    [Inject] public Options.UI.Services.Contracts.IOptionsService _optionsService { get; set; } = default!;
 
     ICollection<Option> _options { get; set; } = default!;
     LineChart<double> lineChart;
@@ -51,7 +53,6 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await FetchOptions();
-        await HandleRedraw();
     }
 
     async Task HandleRedraw()
@@ -77,14 +78,17 @@
         _options.ToList().ForEach(x => _premiums.Add(new List<double>()));
         Labels.ToList().ForEach(month =>
         {
+            double currentWorth = 0;
             var optionsArray = _options.ToArray();
             for (int i = 0; i < optionsArray.Length; i++)
             {
                 if (optionsArray[i].StartDate > startDate.Date && optionsArray[i].ExpirationDate < nextMonthDate.Date)
                 {
-                    worth.Add(optionsArray[i].Worth);
+                    currentWorth += optionsArray[i].Worth;
                 }
             }
+
+            worth.Add(currentWorth);
 
             startDate = startDate.AddMonths(1);
             nextMonthDate = nextMonthDate.AddMonths(1);
@@ -133,7 +137,7 @@
         return Guid.Parse(userId.Value);
     }
 
-    private async Task FetchOptions()
+    public async Task FetchOptions()
     {
         var userId = await GetUserId();
         OptionsFilter filter = new OptionsFilter
@@ -142,6 +146,7 @@
             };
 
         _options = await _optionsService.GetOptionsAsync(filter);
+        await HandleRedraw();
     }
 
 }
