@@ -7,17 +7,17 @@ ENV ASPNETCORE_URLS=http://+:5153
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG configuration=Release
 WORKDIR /src
-COPY ["Options.UI/Options.UI.csproj", "Options.UI/"]
-RUN dotnet restore "Options.UI\Options.UI.csproj"
+COPY ["OptionsStats.UI/OptionsStats.UI.csproj", "OptionsStats.UI/"]
+RUN dotnet restore "OptionsStats.UI\OptionsStats.UI.csproj"
 COPY . .
-WORKDIR "/src/Options.UI"
-RUN dotnet build "Options.UI.csproj" -c $configuration -o /app/build
+WORKDIR "/src/OptionsStats.UI"
+RUN dotnet build "OptionsStats.UI.csproj" -c $configuration -o /app/build
 
 FROM build AS publish
 ARG configuration=Release
-RUN dotnet publish "Options.UI.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "OptionsStats.UI.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Options.UI.dll"]
+ENTRYPOINT ["dotnet", "OptionsStats.UI.dll"]

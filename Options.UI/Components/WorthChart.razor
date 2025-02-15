@@ -13,10 +13,10 @@
 
 @inject AuthenticationStateProvider provider
 @code {
-    [Inject] public Options.UI.Services.Contracts.IOptionsService _optionsService { get; set; } = default!;
+    [Inject] public OptionsStats.UI.Services.Contracts.IOptionsService _optionsService { get; set; } = default!;
 
     ICollection<Option> _options { get; set; } = default!;
-    LineChart<double> lineChart;
+    LineChart<double> lineChart = default!;
     private Random random = new Random();
 
     private static JsonSerializerOptions serializerOptions = new()

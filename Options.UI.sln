@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Options.UI", "Options.UI\Options.UI.csproj", "{599634EF-6B28-434B-8645-2A09E43E9662}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionsStats.UI", "Options.UI\OptionsStats.UI.csproj", "{599634EF-6B28-434B-8645-2A09E43E9662}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Options.UI.Services", "Options.UI.Services\Options.UI.Services.csproj", "{4CBDD237-D29C-48AD-9624-F55F8F1D7021}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionsStats.UI.Services", "Options.UI.Services\OptionsStats.UI.Services.csproj", "{4CBDD237-D29C-48AD-9624-F55F8F1D7021}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

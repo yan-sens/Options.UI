@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Options.UI.Services\Options.UI.Services.csproj" />
+    <ProjectReference Include="..\Options.UI.Services\OptionsStats.UI.Services.csproj" />
   </ItemGroup>
 
 </Project>

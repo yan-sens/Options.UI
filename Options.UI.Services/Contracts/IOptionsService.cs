@@ -1,6 +1,6 @@
-﻿using Options.UI.Services.Models;
+﻿using OptionsStats.UI.Services.Models;
 
-namespace Options.UI.Services.Contracts
+namespace OptionsStats.UI.Services.Contracts
 {
     public interface IOptionsService
     {

@@ -1,10 +1,10 @@
-﻿using Options.UI.Services.Contracts;
-using Options.UI.Services.Models;
+﻿using OptionsStats.UI.Services.Contracts;
+using OptionsStats.UI.Services.Models;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace Options.UI.Services.Services
+namespace OptionsStats.UI.Services.Services
 {
     public class UserProfileService : IUserProfileService
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Options.UI.Services.Enums
+namespace OptionsStats.UI.Services.Enums
 {
     public enum OptionTypeEnum
     {
