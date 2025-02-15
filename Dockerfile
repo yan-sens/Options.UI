@@ -5,7 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["Options.UI.csproj", "."]
+COPY ["Options.UI/Options.UI.csproj", "."]
 RUN dotnet restore "Options.UI.csproj"
 COPY . .
 RUN dotnet build "Options.UI.csproj" -c Release -o /app/build
