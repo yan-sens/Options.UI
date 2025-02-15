@@ -1,4 +1,5 @@
-﻿using Options.UI.Services.Enums;
+﻿using Microsoft.AspNetCore.Components;
+using Options.UI.Services.Enums;
 using Options.UI.Services.Models;
 
 namespace Options.UI.ViewModels
@@ -20,6 +21,12 @@ namespace Options.UI.ViewModels
         public bool DeleteOptionDialogIsOpen { get; set; }
 
         public double RegulatoryFee { get; set; } = 0;
+
+        public string StatsOptionWorth { get; set; } = string.Empty;
+
+        public int StatsOptionCount { get; set; }
+
+        public EventCallback<ICollection<Option>> OptionsChanged { get; set; }
 
         public OptionTypeEnum[] OptionTypes =
         [
@@ -44,6 +51,28 @@ namespace Options.UI.ViewModels
             Option = new Option { StartDate = expirationDate, ParentOptionId = currentOption.Id };
             ParentOptionId = currentOption.Id;
             RollOverDialogIsOpen = true;
+        }
+
+        public void CalculateStatistics()
+        {
+            StatsOptionCount = OptionsList.Count;
+            GetOptionsWorth();
+        }
+
+        public void GetOptionsWorth()
+        {
+            double total = 0;
+
+            OptionsList.ToList().ForEach(option =>
+            {
+                var isOptionClosed = option.IsClosed || (option.RollOvers != null && option.RollOvers.Any(x => x.IsClosed));
+                if(!isOptionClosed)
+                {
+                    total += option.Worth;
+                }
+            });
+
+            StatsOptionWorth = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + (total >= 0 ? "+" : "") + @String.Format("{0:C}", total) + "</span>";
         }
 
         public void OpenCloseOptionDialog(Option currentOption)

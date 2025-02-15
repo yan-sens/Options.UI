@@ -24,28 +24,29 @@
         };
 
     LineChartOptions options = new LineChartOptions()
-    {
-        Scales = new ChartScales
-        { 
-            Y = new ChartAxis { 
-                Type = "linear", 
-                Ticks = new ChartAxisTicks()
-                { 
-                        Callback = (value, index, values) => "$" + value
-                }
-            },
-        },
-        Plugins = new ChartPlugins()
         {
-            Tooltip = new ChartTooltip()
+            Scales = new ChartScales
             {
-                Callbacks = new ChartTooltipCallbacks()
-                { 
+                Y = new ChartAxis
+                {
+                    Type = "linear",
+                    Ticks = new ChartAxisTicks()
+                    {
+                        Callback = (value, index, values) => "$" + value
+                    }
+                },
+            },
+            Plugins = new ChartPlugins()
+            {
+                Tooltip = new ChartTooltip()
+                {
+                    Callbacks = new ChartTooltipCallbacks()
+                    {
                         Label = (value) => "$" + value.FormattedValue
+                    }
                 }
             }
-        }
-    };
+        };
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -71,7 +72,7 @@
         var endDate = new DateTime(currentYear + 1, 1, 1);
         var nextMonthDate = startDate.AddMonths(1);
 
-        var premiums = new List<List<double>>();
+        var worth = new List<double>();
         List<List<double>> _premiums = new List<List<double>>();
         _options.ToList().ForEach(x => _premiums.Add(new List<double>()));
         Labels.ToList().ForEach(month =>
@@ -79,25 +80,9 @@
             var optionsArray = _options.ToArray();
             for (int i = 0; i < optionsArray.Length; i++)
             {
-                double premium = 0;
                 if (optionsArray[i].StartDate > startDate.Date && optionsArray[i].ExpirationDate < nextMonthDate.Date)
                 {
-                    premium = premium + optionsArray[i].Premium;
-                }
-
-                if (optionsArray[i].RollOvers != null)
-                {
-                    double totalPremium = optionsArray[i].RollOvers!
-                                                .Where(rollOver => rollOver.StartDate >= startDate.Date && rollOver.ExpirationDate < nextMonthDate.Date)
-                                                .Select(rollOver => rollOver.Premium)
-                                                .Sum();
-
-                    var premiumAmount = (new List<double> { premium, totalPremium }).Sum();
-                    _premiums.ElementAt(i).Add(premiumAmount);
-                }
-                else
-                {
-                    _premiums.ElementAt(i).Add(premium);
+                    worth.Add(optionsArray[i].Worth);
                 }
             }
 
@@ -105,23 +90,19 @@
             nextMonthDate = nextMonthDate.AddMonths(1);
         });
 
+        var randomColor = ChartColor.FromRgba((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255), 0.5f);
+        List<string> colors = new List<string> { randomColor };
 
-        for (int i = 0; i < _options.Count; i++)
-        {
-            var randomColor = ChartColor.FromRgba((byte)random.Next(255), (byte)random.Next(255), (byte)random.Next(255), 0.5f);
-            List<string> colors = new List<string> { randomColor };
-
-            items.Add(new LineChartDataset<double>
-                {
-                    Label = _options.ToArray()[i].TickerName.ToUpper(),
-                    Data = _premiums.ElementAt(i),
-                    BackgroundColor = colors,
-                    BorderColor = colors,
-                    Fill = true,
-                    PointRadius = 3,
-                    CubicInterpolationMode = "monotone",
-                });
-        }
+        items.Add(new LineChartDataset<double>
+            {
+                Label = "Capital",
+                Data = worth,
+                BackgroundColor = colors,
+                BorderColor = colors,
+                Fill = true,
+                PointRadius = 3,
+                CubicInterpolationMode = "monotone",
+            });
 
         return (items.ToArray());
     }

@@ -33,6 +33,7 @@ builder.Services.AddSingleton<PreloadService>();
 builder.Services.AddMatBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 builder.Services.AddTransient<IOptionsService, OptionsService>();
+builder.Services.AddTransient<ISettingsService, SettingsService>();
 builder.Services.AddTransient<IUserProfileService, UserProfileService>();
 builder.Services.AddBlazoredLocalStorage();
 

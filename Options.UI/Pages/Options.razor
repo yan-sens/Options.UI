@@ -56,17 +56,17 @@
     }
 
     .opt-type-sell {
-        background-color: #D9EAD3;
-        color: #2E336E;
+    background-color: #D9EAD3;
+    color: #2E336E;
     }
 
     .opt-type-put {
-        background-color: #C2D2EF;
-        color: #2E336E;
+    background-color: #C2D2EF;
+    color: #2E336E;
     }
 
     .mdc-tab--active, .mdc-tab--active .mdc-tab__text-label {
-        color: #3a0647;
+    color: #3a0647;
     }
 
 </style>
@@ -74,22 +74,55 @@
 <script>
 
     $(document).on("click", ".bb-detail-view-icon", function (event) {
-        $(event.currentTarget).toggleClass("custom-expanded-icon");
-        var targetRowId = $(event.currentTarget).attr("data-bs-target");
-        $(targetRowId).toggleClass("show");
+    $(event.currentTarget).toggleClass("custom-expanded-icon");
+    var targetRowId = $(event.currentTarget).attr("data-bs-target");
+    $(targetRowId).toggleClass("show");
     });
 
 </script>
 
 <div class="row">
     <div class="col-md-9">
-        <MatTabBar>
-            <MatTabLabel>2 W</MatTabLabel>
-            <MatTabLabel>1 M</MatTabLabel>
-            <MatTabLabel>3 M</MatTabLabel>
-            <MatTabLabel>6 M</MatTabLabel>
-            <MatTabLabel>1 Y</MatTabLabel>
-        </MatTabBar>
+        <div class="row mx-auto">
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Options Count
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+
+            </div>
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Options Worth
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+                @((MarkupString)viewModel.StatsOptionWorth)
+            </div>
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Exp. Date
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+                Test2
+            </div>
+        </div>
+        <div class="row mx-auto">
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Options Count
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+                @viewModel.OptionsList.Count()
+            </div>
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Exp. Date
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+                Test2
+            </div>
+            <div class="col-md-2 opt-margin-bottom opt-pl-0">
+                Exp. Date
+            </div>
+            <div class="col-md-2 opt-margin-bottom">
+                Test2
+            </div>
+        </div>
     </div>
     <div class="col-md-3">
         <div class="d-flex justify-content-end">
@@ -98,9 +131,9 @@
     </div>
 </div>
 
-<div class="row" style="margin-top: 20px;">
+<div class="row" style="margin-top: 20px;" >
     <div class="col-md-6">
-        <Options.UI.Components.PremiumChart />
+        <Options.UI.Components.WorthChart />
     </div>
     <div class="col-md-6">
         <Options.UI.Components.PremiumChart />
@@ -271,8 +304,6 @@
     </div>
 </div>
 
-
-
 <div class="row" style="margin-top: 10px; margin-bottom: 10px;">
 
     <Grid TItem="Option"
@@ -419,6 +450,8 @@
     private Grid<Option> optionsGrid = default!;
     private OptionsViewModel viewModel = new OptionsViewModel();
 
+    public EventCallback<ICollection<Option>> OptionsChanged { get; set; }
+
     private async Task CloseOption()
     {
         await UpdateOption();
@@ -535,6 +568,10 @@
 
         var result = await _optionsService.GetOptionsAsync(filter);
         viewModel.OptionsList = result;
+        viewModel.CalculateStatistics();
+        await optionsGrid.RefreshDataAsync();
+
+        await InvokeAsync(StateHasChanged);
 
         PreloadService.Hide();
 
