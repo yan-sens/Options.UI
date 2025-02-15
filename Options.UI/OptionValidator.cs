@@ -24,6 +24,11 @@ namespace Options.UI
                 response.ErrorMessage = "Pease enter an option start date.";
                 return response;
             }
+            else if (option.StartDate.Date > DateTime.Now.Date)
+            {
+                response.ErrorMessage = "Start date can't be a future date.";
+                return response;
+            }
             else if (option.ExpirationDate == DateTime.MinValue)
             {
                 response.ErrorMessage = "Pease enter an option expiration date.";
@@ -77,7 +82,7 @@ namespace Options.UI
 
             if (option.Completed)
             {
-                if (option.ReturnAmount < 0)
+                if (option.ReturnAmount <= 0)
                 {
                     response.ErrorMessage = string.Format($"Return amound should be positive.");
                     return response;
@@ -106,7 +111,7 @@ namespace Options.UI
 
             if (option.ClosedDate.Value.Date > expirationDate.Date)
             {
-                response.ErrorMessage = $"Closed date should be more then {expirationDate.Date:dd/MM/yyyy}.";
+                response.ErrorMessage = $"Closed date should be less or equal {expirationDate.Date:dd/MM/yyyy}.";
                 return response;
             }
 
@@ -147,7 +152,7 @@ namespace Options.UI
 
             else if (rollOver.ExpirationDate.Date <= expirationDate.Date)
             {
-                response.ErrorMessage = $"Expiration date should be more then {expirationDate.Date}.";
+                response.ErrorMessage = $"Expiration date should be more then {expirationDate.Date:dd/MM/yyyy}.";
                 return response;
             }
 

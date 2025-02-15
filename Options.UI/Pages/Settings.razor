@@ -1,0 +1,65 @@
+﻿@page "/Settings"
+@using global::Options.UI.ViewModels
+@using global::Options.UI.Services.Models;
+@using global::Options.UI.Services.Contracts
+@using BlazorBootstrap
+
+@attribute [Authorize]
+
+@if (viewModel.Settings == null)
+{
+    <p><em>@message</em></p>
+}
+else
+{
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label" style="align-content: center;">Regulatory Fee (per contract) $</label>
+        <div class="col-md-8">
+            <MatTextField Required Label="Regulatory Fee" @bind-Value="@viewModel.Settings!.RegulatoryFee"></MatTextField>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-md-3 col-form-label" style="align-content: center;">Tax %</label>
+        <div class="col-md-8">
+            <MatTextField Required Label="Tax" @bind-Value="@viewModel.Settings!.Tax"></MatTextField>
+        </div>
+    </div>
+
+    <div class="row">
+        <button class="btn btn-primary opt-primary-btn" style="width: 100px; margin-top: 70px;" @onclick="UpdateSettings">Save</button>
+    </div>
+}
+
+@inject HttpClient http
+@code {
+    [Inject] public ISettingsService _settingsService { get; set; } = default!;
+    [Inject] protected PreloadService PreloadService { get; set; } = default!;
+    [Inject] protected IMatToaster Toaster { get; set; } = default!;
+
+    private string message = string.Empty;
+    private SettingsViewModel viewModel = new SettingsViewModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            message = "Loading...";
+
+            viewModel.Settings = await http.GetFromJsonAsync<Services.Models.Settings>("api/settings");
+        }
+        catch
+        {
+            message = "Can't read settings.";
+        }
+    }
+
+    private async Task UpdateSettings()
+    {
+        PreloadService.Show(SpinnerColor.Primary);
+
+        var result = await _settingsService.UpdateSettingsAsync(viewModel.Settings!);
+
+        PreloadService.Hide();
+    }
+}

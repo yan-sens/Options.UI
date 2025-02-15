@@ -9,6 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="3.3.1" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Blazorise.Bootstrap5" Version="1.7.4" />
+    <PackageReference Include="Blazorise.Charts" Version="1.7.4" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.7.4" />
     <PackageReference Include="MatBlazor" Version="2.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.0" />
