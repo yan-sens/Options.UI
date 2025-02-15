@@ -1,21 +1,17 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
-EXPOSE 5153
-
-ENV ASPNETCORE_URLS=http://+:5153
+EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-ARG configuration=Release
 WORKDIR /src
-COPY ["Options.UI/Options.UI.csproj", "Options.UI/"]
-RUN dotnet restore "Options.UI\Options.UI.csproj"
+COPY ["Options.UI/Options.UI.csproj", "."]
+RUN dotnet restore "Options.UI.csproj"
 COPY . .
-WORKDIR "/src/Options.UI"
-RUN dotnet build "Options.UI.csproj" -c $configuration -o /app/build
+RUN dotnet build "Options.UI.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG configuration=Release
-RUN dotnet publish "Options.UI.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Options.UI.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
