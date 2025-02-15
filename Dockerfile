@@ -1,18 +1,23 @@
-# Stage 1: Build the application
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 WORKDIR /app
+EXPOSE 5153
 
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
+ENV ASPNETCORE_URLS=http://+:5153
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG configuration=Release
+WORKDIR /src
+COPY ["Options.UI/Options.UI.csproj", "Options.UI/"]
+RUN dotnet restore "Options.UI\Options.UI.csproj"
+COPY . .
+WORKDIR "/src/Options.UI"
+RUN dotnet build "Options.UI.csproj" -c $configuration -o /app/build
 
-# Stage 2: Serve the app with nginx
-FROM nginx:alpine
-COPY --from=build-env /app/out/wwwroot /usr/share/nginx/html
+FROM build AS publish
+ARG configuration=Release
+RUN dotnet publish "Options.UI.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Options.UI.dll"]
