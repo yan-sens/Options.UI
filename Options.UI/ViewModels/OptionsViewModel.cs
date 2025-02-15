@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using Options.UI.Services.Enums;
-using Options.UI.Services.Models;
+using OptionsStats.UI.Services.Enums;
+using OptionsStats.UI.Services.Models;
 
-namespace Options.UI.ViewModels
+namespace OptionsStats.UI.ViewModels
 {
     public class OptionsViewModel
     {
@@ -34,7 +34,7 @@ namespace Options.UI.ViewModels
 
         public string StatsTotalTax {  get; set; } = string.Empty;
 
-        public Settings Settings { get; set; } = default!;
+        public Settings? Settings { get; set; }
 
         public EventCallback<ICollection<Option>> OptionsChanged { get; set; }
 
@@ -96,7 +96,7 @@ namespace Options.UI.ViewModels
                 }
             });
 
-            var totalPremiumProfit = (total / (worth / 100)) / 100;
+            var totalPremiumProfit = total > 0 ? (total / (worth / 100)) / 100 : 0;
 
             if (!isFixed)
             {
@@ -185,7 +185,7 @@ namespace Options.UI.ViewModels
 
             if (total > 0)
             {
-                taxes = total / 100 * Settings.Tax;
+                taxes = total / 100 * Settings!.Tax;
             }
 
             StatsTotalTax = "<span class='" + (total == 0 ? "opt-green" : "opt-red") + "'>" + @String.Format("{0:C}", taxes) + "</span>";
@@ -197,7 +197,7 @@ namespace Options.UI.ViewModels
             OptionsList.ToList().ForEach(option =>
             {
                 var multiplieer = option.RollOvers != null ? option.RollOvers.Count + 1 : 1;
-                totalFees += Settings.RegulatoryFee * multiplieer * option.Contracts;
+                totalFees += Settings!.RegulatoryFee * multiplieer * option.Contracts;
             });
 
             StatsTotalFees = "<span class='opt-red'>" + @String.Format("{0:C}", totalFees) + "</span>";
@@ -206,7 +206,7 @@ namespace Options.UI.ViewModels
         public string GetTotalOptionFees(Option option)
         {
             var multiplieer = option.RollOvers != null ? option.RollOvers.Count + 1 : 1;
-            var totalFees = Settings.RegulatoryFee * multiplieer * option.Contracts;
+            var totalFees = Settings!.RegulatoryFee * multiplieer * option.Contracts;
 
             return "<span class='opt-red'>" + @String.Format("{0:C}", totalFees) + "</span>";
         }

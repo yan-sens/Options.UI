@@ -1,4 +1,4 @@
-﻿namespace Options.UI.ViewModels
+﻿namespace OptionsStats.UI.ViewModels
 {
     public class SettingsViewModel
     {

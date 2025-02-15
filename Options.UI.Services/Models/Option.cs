@@ -1,6 +1,6 @@
-﻿using Options.UI.Services.Enums;
+﻿using OptionsStats.UI.Services.Enums;
 
-namespace Options.UI.Services.Models
+namespace OptionsStats.UI.Services.Models
 {
     public class Option
     {

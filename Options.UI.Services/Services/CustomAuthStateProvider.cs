@@ -1,12 +1,12 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Options.UI.Services.Models;
+using OptionsStats.UI.Services.Models;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json.Nodes;
 
-namespace Options.UI.Services.Services
+namespace OptionsStats.UI.Services.Services
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {

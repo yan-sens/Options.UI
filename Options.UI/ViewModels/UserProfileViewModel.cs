@@ -1,6 +1,6 @@
-﻿using Options.UI.Services.Models;
+﻿using OptionsStats.UI.Services.Models;
 
-namespace Options.UI.ViewModels
+namespace OptionsStats.UI.ViewModels
 {
     public class UserProfileViewModel
     {

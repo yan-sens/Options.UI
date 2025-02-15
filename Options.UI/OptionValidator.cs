@@ -1,7 +1,7 @@
-﻿using Options.UI.Services.Models;
+﻿using OptionsStats.UI.Services.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Options.UI
+namespace OptionsStats.UI
 {
     public static class OptionValidator
     {
