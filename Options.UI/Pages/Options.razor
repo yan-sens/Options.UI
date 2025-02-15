@@ -117,13 +117,13 @@
                 Total Fees
             </div>
             <div class="col-md-2 opt-margin-bottom">
-
+                @((MarkupString)viewModel.StatsTotalFees)
             </div>
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
                 Estimated Taxes
             </div>
             <div class="col-md-2 opt-margin-bottom">
-
+                @((MarkupString)viewModel.StatsTotalTax)
             </div>
         </div>
         <div class="row mx-auto">
@@ -131,9 +131,9 @@
                 Fixed Income
             </div>
             <div class="col-md-2 opt-margin-bottom">
+                @((MarkupString)viewModel.StatsFixedTotalPremium)
             </div>
             <div class="col-md-2 opt-margin-bottom opt-pl-0">
-                Potential Income
             </div>
             <div class="col-md-2 opt-margin-bottom">
             </div>
@@ -145,7 +145,7 @@
     </div>
     <div class="col-md-2">
         <div class="d-flex justify-content-end">
-            <button class="btn btn-primary main-color" @onclick="viewModel.OpenOptionDialog">Create option</button>
+            <button class="btn btn-primary main-color" @onclick="viewModel.OpenOptionDialog">Create Option</button>
         </div>
     </div>
 </div>
@@ -416,7 +416,7 @@
                             Reg. Fee
                         </div>
                         <div class="col-md-4 opt-margin-bottom">
-                            @((MarkupString)viewModel.GetTotalFees(context))
+                            @((MarkupString)viewModel.GetTotalOptionFees(context))
                         </div>
                         <div class="col-md-2 opt-margin-bottom opt-pl-0">
                             Duration
@@ -463,6 +463,7 @@
 @inject AuthenticationStateProvider provider
 @code {
     [Inject] public IOptionsService _optionsService { get; set; } = default!;
+    [Inject] public ISettingsService _settingsService { get; set; } = default!;
     [Inject] protected PreloadService PreloadService { get; set; } = default!;
     [Inject] protected IMatToaster Toaster { get; set; } = default!;
 
@@ -471,7 +472,10 @@
     private WorthChart WorthChart = default!;
     private PremiumChart PremiumChart = default!;
 
-    public EventCallback<ICollection<Option>> OptionsChanged { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        viewModel.Settings = await _settingsService.GetSettingsAsync();
+    }
 
     private async Task CloseOption()
     {

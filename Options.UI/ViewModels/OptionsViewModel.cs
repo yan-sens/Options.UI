@@ -20,8 +20,6 @@ namespace Options.UI.ViewModels
 
         public bool DeleteOptionDialogIsOpen { get; set; }
 
-        public double RegulatoryFee { get; set; } = 0;
-
         public string StatsOptionWorth { get; set; } = string.Empty;
 
         public string StatsOptionCount { get; set; } = string.Empty;
@@ -29,6 +27,15 @@ namespace Options.UI.ViewModels
         public string StatsActiveOptionCount { get; set; } = string.Empty;
 
         public string StatsTotalPremium { get; set; } = string.Empty;
+
+        public string StatsFixedTotalPremium { get; set; } = string.Empty;
+
+        public string StatsTotalFees { get; set; } = string.Empty;
+
+        public string StatsTotalTax {  get; set; } = string.Empty;
+
+        public Settings Settings { get; set; } = default!;
+
         public EventCallback<ICollection<Option>> OptionsChanged { get; set; }
 
         public OptionTypeEnum[] OptionTypes =
@@ -61,31 +68,46 @@ namespace Options.UI.ViewModels
             StatsOptionCount = OptionsList.Count.ToString();
             GetOptionsWorth();
             GetActiveOptionsCount();
-            CalculateTotalPremium();
+            CalculateTotalPremium(true);
+            CalculateTotalPremium(false);
+            CalculateTotalFees();
+            CalcutateExtimatedTaxes();
         }
 
-        public void CalculateTotalPremium()
+        public void CalculateTotalPremium(bool isFixed)
         {
             double total = 0;
             double worth = 0;
 
             OptionsList.ToList().ForEach(option =>
             {
-                total += option.Premium;
-                worth = option.Worth;
-                if (option.RollOvers != null && option.RollOvers.Count > 0)
+                var isOptionClosed = option.IsClosed || (option.RollOvers != null && option.RollOvers.Any(x => x.IsClosed));
+                if ((isFixed && isOptionClosed) || !isFixed)
                 {
-                    option.RollOvers.ToList().ForEach(x =>
+                    total += option.Premium;
+                    worth = option.Worth;
+                    if (option.RollOvers != null && option.RollOvers.Count > 0)
                     {
-                        total += x.Premium;
-                    });
+                        option.RollOvers.ToList().ForEach(x =>
+                        {
+                            total += x.Premium;
+                        });
+                    }
                 }
             });
 
             var totalPremiumProfit = (total / (worth / 100)) / 100;
 
-            StatsTotalPremium = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + (total >= 0 ? "+" : "") + 
-                totalPremiumProfit.ToString("P1") + " (" + @String.Format("{0:C}", total) + ")</span>";
+            if (!isFixed)
+            {
+                StatsTotalPremium = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + (total >= 0 ? "+" : "") +
+                    totalPremiumProfit.ToString("P1") + " (" + @String.Format("{0:C}", total) + ")</span>";
+            }
+            else
+            {
+                StatsFixedTotalPremium = "<span class='" + (total >= 0 ? "opt-green" : "opt-red") + "'>" + (total >= 0 ? "+" : "") +
+                    totalPremiumProfit.ToString("P1") + " (" + @String.Format("{0:C}", total) + ")</span>";
+            }
         }
 
         public void GetOptionsWorth()
@@ -140,12 +162,53 @@ namespace Options.UI.ViewModels
             CreateOptionDialogIsOpen = true;
         }
 
-        public string GetTotalFees(Option option)
+        public void CalcutateExtimatedTaxes()
+        {
+            double total = 0;
+            double taxes = 0;
+
+            OptionsList.ToList().ForEach(option =>
+            {
+                var isOptionClosed = option.IsClosed || (option.RollOvers != null && option.RollOvers.Any(x => x.IsClosed));
+                if(isOptionClosed)
+                {
+                    total += option.Premium;
+                    if (option.RollOvers != null && option.RollOvers.Count > 0)
+                    {
+                        option.RollOvers.ToList().ForEach(x =>
+                        {
+                            total += x.Premium;
+                        });
+                    }
+                }
+            });
+
+            if (total > 0)
+            {
+                taxes = total / 100 * Settings.Tax;
+            }
+
+            StatsTotalTax = "<span class='" + (total == 0 ? "opt-green" : "opt-red") + "'>" + @String.Format("{0:C}", taxes) + "</span>";
+        }
+
+        public void CalculateTotalFees()
+        {
+            double totalFees = 0;
+            OptionsList.ToList().ForEach(option =>
+            {
+                var multiplieer = option.RollOvers != null ? option.RollOvers.Count + 1 : 1;
+                totalFees += Settings.RegulatoryFee * multiplieer * option.Contracts;
+            });
+
+            StatsTotalFees = "<span class='opt-red'>" + @String.Format("{0:C}", totalFees) + "</span>";
+        }
+
+        public string GetTotalOptionFees(Option option)
         {
             var multiplieer = option.RollOvers != null ? option.RollOvers.Count + 1 : 1;
-            var totalFees = RegulatoryFee * multiplieer;
+            var totalFees = Settings.RegulatoryFee * multiplieer * option.Contracts;
 
-            return @String.Format("{0:C}", totalFees);
+            return "<span class='opt-red'>" + @String.Format("{0:C}", totalFees) + "</span>";
         }
 
         public static string GetDuration(Option option)

@@ -15,7 +15,7 @@ namespace Options.UI.Services.Services
             this._httpClient = httpClient;
         }
 
-        public async Task<Settings?> GetSettingsByUserIdAsync(Guid userId)
+        public async Task<Settings?> GetSettingsAsync()
         {
             return await _httpClient.GetFromJsonAsync<Settings>($"api/settings");
         }
